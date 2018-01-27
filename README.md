@@ -4,6 +4,8 @@ Sankey Diagram panel for Grafana
 ## Acknowledgements
 This plugin development is inspired by [Grafana pie chart](https://github.com/grafana/piechart-panel). I have used this code as a base-line to develop this plugin
 
+The Sankey diagram has been created using the [Google Chart](https://developers.google.com/chart/interactive/docs/gallery/sankey)
+
 ## Info
 In this plugin, the Sankey daigram panel has been used to visualize the distribution between 2 keys. 
 Important - This panel is dependent on the google chart and requires loader.js which needs to be included in the Grafana index.html file
