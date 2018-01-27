@@ -1,0 +1,34 @@
+{
+  "type": "panel",
+  "name": "Sankey Diagram Chart",
+  "id": "sankey-panel",
+
+  "info": {
+    "description": "Sankey Diagram panel for grafana",
+    "author": {
+      "name": "Kumaravel",
+      "url": "https://github.com/kumaravel29"
+    },
+    "keywords": ["sankey", "panel"],
+    "logos": {
+      "small": "src/img/sankey_diagram_logo_small.png",
+      "large": "src/img/sankey_diagram_logo_large.png"
+    },
+    "links": [
+      {"name": "Project site", "url": "https://github.com/kumaravel29/sankey-panel"},
+      {"name": "MIT License", "url": "https://github.com/kumaravel29/sankey-panel/blob/master/LICENSE"}
+    ],
+    "screenshots": [
+      {"name": "Legend to the right", "path": "src/img/sankey-legend-rhs.png"},
+      {"name": "Legend underneath", "path": "src/img/sankey-panel-legend-under.png"},
+      {"name": "Sankey options", "path": "src/img/sankey-panel-options.png"}
+    ],
+    "version": "1.0",
+    "updated": "2018-01-27"
+  },
+
+  "dependencies": {
+    "grafanaVersion": "4.6",
+    "plugins": [ ]
+  }
+}
