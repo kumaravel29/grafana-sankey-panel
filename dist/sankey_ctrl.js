@@ -117,7 +117,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/utils/kbn', 'app/core/ti
         _createClass(SankeyCtrl, [{
           key: 'onInitEditMode',
           value: function onInitEditMode() {
-            this.addEditorTab('Options', 'public/plugins/grafana-sankey-panel/editor.html', 2);
+            this.addEditorTab('Options', 'public/plugins/sankey-panel/editor.html', 2);
             this.unitFormats = kbn.getUnitFormats();
           }
         }, {
