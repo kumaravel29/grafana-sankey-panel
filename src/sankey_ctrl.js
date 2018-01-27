@@ -47,7 +47,7 @@ export class SankeyCtrl extends MetricsPanelCtrl {
   }
 
   onInitEditMode() {
-    this.addEditorTab('Options', 'public/plugins/grafana-sankey-panel/editor.html', 2);
+    this.addEditorTab('Options', 'public/plugins/sankey-panel/editor.html', 2);
     this.unitFormats = kbn.getUnitFormats();
   }
 
