@@ -2,10 +2,10 @@
   "name": "sankey-panel",
   "private": true,
   "version": "1.0.0",
-  "description": "",
+  "description": "This panel is to visualize data in Sankey Diagram.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/grafana/sankey-panel.git"
+    "url": "git+https://github.com/kumaravel29/sankey-panel.git"
   },
   "author": "",
   "license": "ISC",
