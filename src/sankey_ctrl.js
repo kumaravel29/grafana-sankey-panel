@@ -73,7 +73,7 @@ export class SankeyCtrl extends MetricsPanelCtrl {
 
   parseSeries(series) {
     return _.map(this.series, (serie, i) => {
-        if(serie.alias.split("---").length === 2){
+        if(serie.alias.split("---").length >= 2){
           return {
             label: serie.alias,
             data: serie.stats[this.panel.valueName],

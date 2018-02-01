@@ -150,7 +150,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/utils/kbn', 'app/core/ti
             var _this2 = this;
 
             return _.map(this.series, function (serie, i) {
-              if (serie.alias.split("---").length === 2) {
+              if (serie.alias.split("---").length >= 2) {
                 return {
                   label: serie.alias,
                   data: serie.stats[_this2.panel.valueName],
