@@ -7,7 +7,6 @@ import angular from 'angular';
 import jquery from 'jquery';
 import config from 'app/core/config';
 import TimeSeries from 'app/core/time_series2';
-import TimeSeriesSankey from 'app/core/time_series_sankey';
 import TableModel from 'app/core/table_model';
 import {coreModule, appEvents, contextSrv} from 'app/core/core';
 import * as datemath from 'app/core/utils/datemath';
@@ -93,8 +92,6 @@ exposeToPlugin('app/core/utils/ticks', ticks);
 exposeToPlugin('app/core/config', config);
 exposeToPlugin('app/core/time_series', TimeSeries);
 exposeToPlugin('app/core/time_series2', TimeSeries);
-exposeToPlugin('app/core/time_series_sankey', TimeSeriesSankey);
-//exposeToPlugin('./loader', google);
 exposeToPlugin('app/core/table_model', TableModel);
 exposeToPlugin('app/core/app_events', appEvents);
 exposeToPlugin('app/core/core_module', coreModule);
@@ -109,14 +106,13 @@ import 'vendor/flot/jquery.flot';
 import 'vendor/flot/jquery.flot.selection';
 import 'vendor/flot/jquery.flot.time';
 import 'vendor/flot/jquery.flot.stack';
-//import 'vendor/flot/jquery.flot.pie';
 import 'vendor/flot/jquery.flot.stackpercent';
 import 'vendor/flot/jquery.flot.fillbelow';
 import 'vendor/flot/jquery.flot.crosshair';
 import 'vendor/flot/jquery.flot.dashes';
 
 const flotDeps = [
-  'jquery.flot', /*'jquery.flot.pie',*/ 'jquery.flot.time', 'jquery.flot.fillbelow', 'jquery.flot.crosshair',
+  'jquery.flot', 'jquery.flot.time', 'jquery.flot.fillbelow', 'jquery.flot.crosshair',
   'jquery.flot.stack', 'jquery.flot.selection', 'jquery.flot.stackpercent', 'jquery.flot.events'
 ];
 for (let flotDep of flotDeps) {
