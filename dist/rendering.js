@@ -124,16 +124,27 @@ System.register(['lodash', 'jquery'], function (_export, _context) {
         data1.addColumn('string', 'From');
         data1.addColumn('string', 'To');
         data1.addColumn('number', 'Count');
-
+        var jsonObject = {};
         data.forEach(function (element) {
-          data1.addRows([[element.label.split("---")[0], element.label.split("---")[1], element.data]]);
+          var labelArray = element.label.split("---");
+          for (var i = 0; i < labelArray.length - 1; i++) {
+            if (jsonObject.hasOwnProperty(labelArray[i] + "---" + labelArray[i + 1])) {
+              var tempValue = jsonObject[labelArray[i] + "---" + labelArray[i + 1]].value;
+              jsonObject[labelArray[i] + "---" + labelArray[i + 1]].value = element.data + tempValue;
+            } else {
+              jsonObject[labelArray[i] + "---" + labelArray[i + 1]] = {
+                "source": labelArray[i],
+                "target": labelArray[i + 1],
+                "value": element.data
+              };
+            }
+          }
         });
-        // Set the sankey diagram properties
-        var sankey = d3.sankey().nodeWidth(36).nodePadding(40).size([width, height]);
 
-        var path = sankey.link();
-        console.log("================================================");
-        console.log(path);
+        for (var key in jsonObject) {
+          data1.addRows([[jsonObject[key].source, jsonObject[key].target, jsonObject[key].value]]);
+        }
+
         // Set chart options
         var options = {
           width: '100%',
@@ -144,8 +155,6 @@ System.register(['lodash', 'jquery'], function (_export, _context) {
         var chart = new google.visualization.Sankey(elem['0']);
         chart.draw(data1, options);
       }
-
-      //plotSankeyDiagram(data);
     }
 
     function render(incrementRenderCounter) {
