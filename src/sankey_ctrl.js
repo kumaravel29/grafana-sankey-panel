@@ -97,9 +97,19 @@ export class SankeyCtrl extends MetricsPanelCtrl {
         var keyList = Object.keys(seriesData.props);
         var keyListLength = keyList.length;
         if (keyListLength >= 2 ) {
+          var aliasName='';
+          for (var i = 0; i < keyListLength; i++) {
+            if(i === 0){
+              aliasName=keyList[i]+":"+seriesData.props[keyList[i]];
+            } else { 
+              aliasName = aliasName + "---" + keyList[i]+":"+seriesData.props[keyList[i]];
+            }
+          }
+          console.log(aliasName);
+            
           var series = new TimeSeries({
             datapoints: seriesData.datapoints,
-            alias: keyList[keyListLength-2]+":"+seriesData.props[keyList[keyListLength-2]]+"---"+keyList[keyListLength-1]+":"+seriesData.props[keyList[keyListLength-1]]
+            alias: aliasName
           });
           series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
           return series;
