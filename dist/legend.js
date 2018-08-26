@@ -1,19 +1,18 @@
-'use strict';
+"use strict";
 
-System.register(['angular', 'lodash', 'app/core/utils/kbn', 'jquery'], function (_export, _context) {
+System.register(["angular", "app/core/utils/kbn", "jquery", "jquery.flot", "jquery.flot.time", "./lib/perfect-scrollbar.min"], function (_export, _context) {
   "use strict";
 
-  var angular, _, kbn, $;
-
+  var angular, kbn, $, PerfectScrollbar;
   return {
     setters: [function (_angular) {
       angular = _angular.default;
-    }, function (_lodash) {
-      _ = _lodash.default;
     }, function (_appCoreUtilsKbn) {
       kbn = _appCoreUtilsKbn.default;
     }, function (_jquery) {
       $ = _jquery.default;
+    }, function (_jqueryFlot) {}, function (_jqueryFlotTime) {}, function (_libPerfectScrollbarMin) {
+      PerfectScrollbar = _libPerfectScrollbarMin.default;
     }],
     execute: function () {
 
@@ -26,9 +25,17 @@ System.register(['angular', 'lodash', 'app/core/utils/kbn', 'jquery'], function 
             var panel = ctrl.panel;
             var data;
             var seriesList;
+            var dataList;
             var i;
+            var legendScrollbar;
 
-            ctrl.events.on('render', function () {
+            scope.$on("$destroy", function () {
+              if (legendScrollbar) {
+                legendScrollbar.destroy();
+              }
+            });
+
+            ctrl.events.on("render", function () {
               data = ctrl.series;
               if (data) {
                 for (var i in data) {
@@ -39,21 +46,21 @@ System.register(['angular', 'lodash', 'app/core/utils/kbn', 'jquery'], function 
             });
 
             function getSeriesIndexForElement(el) {
-              return el.parents('[data-series-index]').data('series-index');
+              return el.parents("[data-series-index]").data("series-index");
             }
 
             function toggleSeries(e) {
               var el = $(e.currentTarget);
               var index = getSeriesIndexForElement(el);
-              var seriesInfo = seriesList[index];
-              var scrollPosition = $($container.children('tbody')).scrollTop();
+              var seriesInfo = dataList[index];
+              var scrollPosition = $($container.children("tbody")).scrollTop();
               ctrl.toggleSeries(seriesInfo);
-              $($container.children('tbody')).scrollTop(scrollPosition);
+              $($container.children("tbody")).scrollTop(scrollPosition);
             }
 
             function sortLegend(e) {
               var el = $(e.currentTarget);
-              var stat = el.data('stat');
+              var stat = el.data("stat");
 
               if (stat !== panel.legend.sort) {
                 panel.legend.sortDesc = null;
@@ -82,41 +89,41 @@ System.register(['angular', 'lodash', 'app/core/utils/kbn', 'jquery'], function 
               var html = '<th class="pointer" data-stat="' + statName + '">' + name;
 
               if (panel.legend.sort === statName) {
-                var cssClass = panel.legend.sortDesc ? 'fa fa-caret-down' : 'fa fa-caret-up';
+                var cssClass = panel.legend.sortDesc ? "fa fa-caret-down" : "fa fa-caret-up";
                 html += ' <span class="' + cssClass + '"></span>';
               }
 
-              return html + '</th>';
+              return html + "</th>";
             }
 
             function getLegendPercentageHtml(statName) {
-              var name = 'percentage';
+              var name = "percentage";
               var html = '<th class="pointer" data-stat="' + statName + '">' + name;
 
               if (panel.legend.sort === statName) {
-                var cssClass = panel.legend.sortDesc ? 'fa fa-caret-down' : 'fa fa-caret-up';
+                var cssClass = panel.legend.sortDesc ? "fa fa-caret-down" : "fa fa-caret-up";
                 html += ' <span class="' + cssClass + '"></span>';
               }
 
-              return html + '</th>';
+              return html + "</th>";
             }
 
             function openColorSelector(e) {
               // if we clicked inside poup container ignore click
-              if ($(e.target).parents('.popover').length) {
+              if ($(e.target).parents(".popover").length) {
                 return;
               }
 
-              var el = $(e.currentTarget).find('.fa-minus');
+              var el = $(e.currentTarget).find(".fa-minus");
               var index = getSeriesIndexForElement(el);
               var series = seriesList[index];
 
               $timeout(function () {
                 popoverSrv.show({
                   element: el[0],
-                  position: 'bottom center',
-                  template: '<series-color-picker series="series" onToggleAxis="toggleAxis" onColorChange="colorSelected">' + '</series-color-picker>',
-                  openOn: 'hover',
+                  position: "bottom center",
+                  template: '<series-color-picker series="series" onToggleAxis="toggleAxis" onColorChange="colorSelected">' + "</series-color-picker>",
+                  openOn: "hover",
                   model: {
                     autoClose: true,
                     series: series,
@@ -133,18 +140,24 @@ System.register(['angular', 'lodash', 'app/core/utils/kbn', 'jquery'], function 
 
               if (firstRender) {
                 elem.append($container);
-                $container.on('click', '.graph-legend-icon', openColorSelector);
-                $container.on('click', '.graph-legend-alias', toggleSeries);
-                $container.on('click', 'th', sortLegend);
+                $container.on("click", ".piechart-legend-icon", openColorSelector);
+                $container.on("click", ".piechart-legend-alias", toggleSeries);
+                $container.on("click", "th", sortLegend);
                 firstRender = false;
               }
 
               seriesList = data;
+              dataList = ctrl.data;
 
               $container.empty();
 
+              var width = panel.legendType == "Right side" && panel.legend.sideWidth ? panel.legend.sideWidth + "px" : "";
+              var ieWidth = panel.legendType == "Right side" && panel.legend.sideWidth ? panel.legend.sideWidth - 1 + "px" : "";
+              elem.css("min-width", width);
+              elem.css("width", ieWidth);
+
               var showValues = panel.legend.values || panel.legend.percentage;
-              var tableLayout = (panel.legendType === 'Under graph' || panel.legendType === 'Right side') && showValues;
+              var tableLayout = (panel.legendType === "Under graph" || panel.legendType === "Right side") && showValues;
 
               $container.toggleClass('graph-legend-table', tableLayout);
 
@@ -157,7 +170,7 @@ System.register(['angular', 'lodash', 'app/core/utils/kbn', 'jquery'], function 
                 if (panel.legend.percentage) {
                   header += getLegendPercentageHtml(ctrl.panel.valueName);
                 }
-                header += '</tr>';
+                header += "</tr>";
                 legendHeader = $(header);
               }
 
@@ -182,7 +195,7 @@ System.register(['angular', 'lodash', 'app/core/utils/kbn', 'jquery'], function 
 
               for (i = 0; i < seriesList.length; i++) {
                 var series = seriesList[i];
-                var seriesData = ctrl.data[i];
+                var seriesData = dataList[i];
 
                 // ignore empty series
                 if (panel.legend.hideEmpty && series.allIsNull) {
@@ -193,7 +206,7 @@ System.register(['angular', 'lodash', 'app/core/utils/kbn', 'jquery'], function 
                   continue;
                 }
 
-                var decimal = 2;
+                var decimal = 0;
                 if (ctrl.panel.legend.percentageDecimals) {
                   decimal = ctrl.panel.legend.percentageDecimals;
                 }
@@ -210,7 +223,7 @@ System.register(['angular', 'lodash', 'app/core/utils/kbn', 'jquery'], function 
                 html += '<a class="graph-legend-alias" style="float:none;">' + seriesData.label + '</a>';
 
                 if (showValues && tableLayout) {
-                  var value = series.stats[ctrl.panel.valueName];
+                  var value = seriesData.legendData;
                   if (panel.legend.values) {
                     html += '<div class="graph-legend-value">' + ctrl.formatValue(value) + '</div>';
                   }
@@ -220,7 +233,7 @@ System.register(['angular', 'lodash', 'app/core/utils/kbn', 'jquery'], function 
                   }
                 }
 
-                html += '</div>';
+                html += "</div>";
 
                 seriesElements.push($(html));
                 seriesShown++;
@@ -241,6 +254,32 @@ System.register(['angular', 'lodash', 'app/core/utils/kbn', 'jquery'], function 
                 $container.append(tbodyElem);
               } else {
                 $container.append(seriesElements);
+              }
+
+              if (panel.legendType === "Under graph") {
+                addScrollbar();
+              } else {
+                destroyScrollbar();
+              }
+            }
+            function addScrollbar() {
+              var scrollbarOptions = {
+                // Number of pixels the content height can surpass the container height without enabling the scroll bar.
+                scrollYMarginOffset: 2,
+                suppressScrollX: true
+              };
+
+              if (!legendScrollbar) {
+                legendScrollbar = new PerfectScrollbar(elem[0], scrollbarOptions);
+              } else {
+                legendScrollbar.update();
+              }
+            }
+
+            function destroyScrollbar() {
+              if (legendScrollbar) {
+                legendScrollbar.destroy();
+                legendScrollbar = null;
               }
             }
           }

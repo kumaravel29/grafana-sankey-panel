@@ -45,3 +45,6 @@ needs read access to the directory.
 
 # Changelog
 
+1.0.0 - Initial plugin code for Grafana 4.6
+
+2.0.0 - Changes for support Grafana 5.x
