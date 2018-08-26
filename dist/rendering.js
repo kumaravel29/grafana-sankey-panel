@@ -1,6 +1,6 @@
 'use strict';
 
-System.register(['lodash', 'jquery'], function (_export, _context) {
+System.register(['lodash', 'jquery', 'jquery.flot', 'jquery.flot.pie'], function (_export, _context) {
   "use strict";
 
   var _, $;
@@ -29,9 +29,10 @@ System.register(['lodash', 'jquery'], function (_export, _context) {
           return 0;
         }
 
-      if (ctrl.panel.legend.percentage || ctrl.panel.legend.values) {
-        var total = 25 + 21 * data.length;
-        return Math.min(total, Math.floor(panelHeight / 2));
+      if (ctrl.panel.legendType == 'Under graph' && ctrl.panel.legend.percentage || ctrl.panel.legend.values) {
+        var breakPoint = parseInt(ctrl.panel.breakPoint) / 100;
+        var total = 23 + 20 * data.length;
+        return Math.min(total, Math.floor(panelHeight * breakPoint));
       }
 
       return 27;
@@ -77,7 +78,8 @@ System.register(['lodash', 'jquery'], function (_export, _context) {
     function addSankey() {
 
       var width = elem.width();
-      var height = elem.height();
+      var height = ctrl.height - getLegendHeight(ctrl.height);
+
       var size = Math.min(width, height);
 
       var plotCanvas = $('<div></div>');
@@ -85,19 +87,54 @@ System.register(['lodash', 'jquery'], function (_export, _context) {
         top: '10px',
         margin: 'auto',
         position: 'relative',
-        height: size - 20 + 'px'
+        paddingBottom: 20 + 'px',
+        height: size + 'px'
       };
 
       plotCanvas.css(plotCss);
 
       var backgroundColor = $('body').css('background-color');
 
+      var options = {
+        legend: {
+          show: false
+        },
+        series: {
+          pie: {
+            show: true,
+            stroke: {
+              color: backgroundColor,
+              width: parseFloat(ctrl.panel.strokeWidth).toFixed(1)
+            },
+            label: {
+              show: ctrl.panel.legend.show && ctrl.panel.legendType === 'On graph',
+              formatter: formatter
+            },
+            highlight: {
+              opacity: 0.0
+            },
+            combine: {
+              threshold: ctrl.panel.combine.threshold,
+              label: ctrl.panel.combine.label
+            }
+          }
+        },
+        grid: {
+          hoverable: true,
+          clickable: false
+        }
+      };
+
+      if (panel.pieType === 'donut') {
+        options.series.pie.innerRadius = 0.5;
+      }
+
       data = ctrl.data;
 
       for (var i = 0; i < data.length; i++) {
         var series = data[i];
 
-        // if hidden remove points and disable stack
+        // if hidden remove points
         if (ctrl.hiddenSeries[series.label]) {
           series.data = {};
           series.stack = false;
@@ -105,13 +142,16 @@ System.register(['lodash', 'jquery'], function (_export, _context) {
       }
 
       if (panel.legend.sort) {
+        if (ctrl.panel.valueName !== panel.legend.sort) {
+          panel.legend.sort = ctrl.panel.valueName;
+        }
         if (panel.legend.sortDesc === true) {
           data.sort(function (a, b) {
-            return b.data - a.data;
+            return b.legendData - a.legendData;
           });
         } else {
           data.sort(function (a, b) {
-            return a.data - b.data;
+            return a.legendData - b.legendData;
           });
         }
       }
@@ -139,6 +179,17 @@ System.register(['lodash', 'jquery'], function (_export, _context) {
               };
             }
           }
+          /*
+                var body;
+                var percent = parseFloat(item.series.percent).toFixed(2);
+                var formatted = ctrl.formatValue(item.series.data[0][1]);
+          
+                body = '<div class="piechart-tooltip-small"><div class="piechart-tooltip-time">';
+                body += '<div class="piechart-tooltip-value">' + item.series.label + ': ' + formatted;
+                body += " (" + percent + "%)" + '</div>';
+                body += "</div></div>";
+          
+                $tooltip.html(body).place_tt(pos.pageX + 20, pos.pageY);*/
         });
 
         for (var key in jsonObject) {
@@ -186,7 +237,7 @@ System.register(['lodash', 'jquery'], function (_export, _context) {
       _ = _lodash.default;
     }, function (_jquery) {
       $ = _jquery.default;
-    }],
+    }, function (_jqueryFlot) {}, function (_jqueryFlotPie) {}],
     execute: function () {}
   };
 });

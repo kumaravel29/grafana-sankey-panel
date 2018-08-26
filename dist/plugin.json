@@ -23,8 +23,8 @@
       {"name": "Legend underneath", "path": "src/img/sankey-panel-legend-under.png"},
       {"name": "Sankey options", "path": "src/img/sankey-panel-options.png"}
     ],
-    "version": "1.0",
-    "updated": "2018-01-27"
+    "version": "1.1",
+    "updated": "2018-08-26"
   },
 
   "dependencies": {
