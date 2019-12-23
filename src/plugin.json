@@ -1,7 +1,7 @@
 {
   "type": "panel",
   "name": "Sankey Diagram Chart",
-  "id": "sankey-panel",
+  "id": "grafana-sankey-panel",
 
   "info": {
     "description": "Sankey Diagram panel for grafana",
@@ -11,20 +11,21 @@
     },
     "keywords": ["sankey", "panel"],
     "logos": {
-      "small": "src/img/sankey_diagram_logo_small.png",
-      "large": "src/img/sankey_diagram_logo_large.png"
+      "small": "img/sankey_diagram_logo_small.png",
+      "large": "img/sankey_diagram_logo_large.png"
     },
     "links": [
       {"name": "Project site", "url": "https://github.com/kumaravel29/sankey-panel"},
       {"name": "MIT License", "url": "https://github.com/kumaravel29/sankey-panel/blob/master/LICENSE"}
     ],
     "screenshots": [
-      {"name": "Legend to the right", "path": "src/img/sankey-legend-rhs.png"},
-      {"name": "Legend underneath", "path": "src/img/sankey-panel-legend-under.png"},
-      {"name": "Sankey options", "path": "src/img/sankey-panel-options.png"}
+      {"name": "Legend to the right", "path": "img/sankey-legend-rhs.png"},
+      {"name": "Legend underneath", "path": "img/sankey-panel-legend-under.png"},
+      {"name": "Sankey options", "path": "img/sankey-panel-options.png"},
+      {"name": "Sankey query example", "path": "img/sankey-panel-query-example.png"}
     ],
-    "version": "1.1",
-    "updated": "2018-08-26"
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
   },
 
   "dependencies": {

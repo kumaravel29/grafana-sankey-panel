@@ -1,5 +1,6 @@
 node_modules
 npm-debug.log
+dist/
 coverage/
 .aws-config.json
 awsconfig
@@ -32,3 +33,4 @@ fig.yml
 profile.cov
 grafana
 .notouch
+Dockerfile

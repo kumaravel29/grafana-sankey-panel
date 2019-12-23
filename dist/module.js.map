@@ -1,1 +1,0 @@
-{"version":3,"sources":["../src/module.js"],"names":["SankeyCtrl"],"mappings":";;;;;;;;AAAQA,gB,gBAAAA,U;;;2BAGNA,U","file":"module.js","sourcesContent":["import {SankeyCtrl} from './sankey_ctrl';\n\nexport {\n  SankeyCtrl as PanelCtrl\n};"]}
