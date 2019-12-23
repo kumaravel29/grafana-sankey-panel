@@ -1,53 +1,50 @@
-[![CircleCI](https://circleci.com/gh/grafana/piechart-panel.svg?style=svg)](https://circleci.com/gh/grafana/piechart-panel)
-[![David Dependancy Status](https://david-dm.org/grafana/piechart-panel.svg)](https://david-dm.org/grafana/piechart-panel)
-[![David Dev Dependency Status](https://david-dm.org/grafana/piechart-panel/dev-status.svg)](https://david-dm.org/grafana/piechart-panel/?type=dev)
+# sankey-panel
+Sankey Diagram panel for Grafana
 
-Use the new grafana-cli tool to install piechart-panel from the commandline:
+![](./src/img/sankey_diagram_logo_large.png)
 
+## Acknowledgements
+This plugin development is inspired by [Grafana pie chart](https://github.com/grafana/piechart-panel). I have used this code as a base-line to develop this plugin
+
+The Sankey diagram has been created using the [Google Chart](https://developers.google.com/chart/interactive/docs/gallery/sankey)
+
+## Info
+In this plugin, the Sankey daigram panel has been used to visualize the distribution between 2 keys. 
+Important - This panel is dependent on the google chart and requires loader.js which needs to be included in the Grafana index.html file
 ```
-grafana-cli plugins install grafana-piechart-panel
-```
-
-The plugin will be installed into your grafana plugins directory; the default is /var/lib/grafana/plugins if you installed the grafana package.
-
-More instructions on the cli tool can be found [here](http://docs.grafana.org/v3.0/plugins/installation/).
-
-You need the lastest grafana build for Grafana 3.0 to enable plugin support. You can get it here : http://grafana.org/download/builds.html
-
-## Alternative installation methods
-
-### Download latest zip
-
-```BASH
-wget -nv https://grafana.com/api/plugins/grafana-piechart-panel/versions/latest/download -O /tmp/grafana-piechart-panel.zip
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 ```
 
-Extract and move into place
-```BASH
-unzip -q /tmp/grafana-piechart-panel.zip -d /tmp
-mv /tmp/grafana-piechart-panel-* /var/lib/grafana/plugins/grafana-piechart-panel
-sudo service grafana-server restart
-```
+The query in the metrics should be grouped by the 2 keys between which the distribution needs to be visualized as shown below. 
 
-### Git Clone
+![](./src/img/sankey-panel-query-example.png)
+
+## Installation method
+
 It is also possible to clone this repo directly into your plugins directory.
 
 Afterwards restart grafana-server and the plugin should be automatically detected and used.
 
 ```
-git clone https://github.com/grafana/piechart-panel.git --branch release-1.3.8
+git clone https://github.com/kumaravel29/sankey-panel.git
 sudo service grafana-server restart
 ```
 
-### Clone into a directory of your choice
+## Clone into a directory of your choice
 
 If the plugin is cloned to a directory that is not the default plugins directory then you need to edit your grafana.ini config file (Default location is at /etc/grafana/grafana.ini) and add this:
 
 ```ini
-[plugin.piechart]
-path = /home/your/clone/dir/piechart-panel
+[plugin.sankey]
+path = /home/your/clone/dir/sankey-panel
 ```
 
 Note that if you clone it into the grafana plugins directory you do not need to add the above config option. That is only
 if you want to place the plugin in a directory outside the standard plugins directory. Be aware that grafana-server
 needs read access to the directory.
+
+# Changelog
+
+1.0.0 - Initial plugin code for Grafana 4.6
+
+2.0.0 - Changes for support Grafana 5.x
