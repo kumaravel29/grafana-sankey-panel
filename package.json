@@ -1,30 +1,39 @@
 {
   "name": "sankey-panel",
-  "private": true,
-  "version": "2.0.0",
-  "description": "This panel is to visualize data in Sankey Diagram.",
+  "version": "3.0.0",
+  "description": "Pie chart panel for Grafana",
+  "scripts": {
+    "build": "grafana-toolkit plugin:build",
+    "test": "grafana-toolkit plugin:test",
+    "dev": "grafana-toolkit plugin:dev",
+    "watch": "grafana-toolkit plugin:dev --watch"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kumaravel29/sankey-panel.git"
   },
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "grunt": "^0.4.5",
-    "babel": "^6.5.1",
-    "grunt-babel": "^6.0.0",
-    "grunt-contrib-copy": "^0.8.2",
-    "grunt-contrib-watch": "^0.6.1",
-    "grunt-contrib-uglify": "^0.11.0",
-    "grunt-systemjs-builder": "^0.2.5",
-    "load-grunt-tasks": "^3.2.0",
-    "grunt-execute": "^0.2.2",
-    "grunt-contrib-clean": "0.6.0"
-  },
+  "author": "Kumaravel Arunachalam",
+  "license": "MIT",
+  "private": true,
   "dependencies": {
-    "babel-plugin-transform-es2015-modules-systemjs": "^6.5.0",
-    "babel-plugin-transform-es2015-for-of": "^6.5.0",
-    "babel-preset-es2015": "^6.5.0",
-    "lodash": "^4.0.0"
+    "@types/d3-sankey": "^0.11.0",
+    "@types/google.visualization": "^0.0.51",
+    "angular": "^1.7.8",
+    "flot": "^3.2.9",
+    "google-charts": "^2.0.0",
+    "jquery": "^3.4.1",
+    "jquery.flot": "^0.8.3",
+    "lodash": "^4.17.15",
+    "yarn": "^1.21.1"
+  },
+  "devDependencies": {
+    "@grafana/toolkit": "^6.5.2",
+    "@grafana/ui": "latest",
+    "@types/angular": "^1.6.56",
+    "@types/flot": "^0.0.31",
+    "@types/grafana": "github:CorpGlory/types-grafana",
+    "@types/lodash": "4.14.138",
+    "d3-sankey": "^0.12.3",
+    "grafana-sdk-mocks": "github:grafana/grafana-sdk-mocks"
   }
 }

@@ -15,7 +15,7 @@ Important - This panel is dependent on the google chart and requires loader.js w
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 ```
 
-The query in the metrics should be grouped by the 2 keys between which the distribution needs to be visualized as shown below. 
+The query in the metrics should be grouped by the 2 keywords between which the distribution needs to be visualized as shown below. 
 
 ![](./src/img/sankey-panel-query-example.png)
 
@@ -48,3 +48,5 @@ needs read access to the directory.
 1.0.0 - Initial plugin code for Grafana 4.6
 
 2.0.0 - Changes for support Grafana 5.x
+
+3.0.0 - Changes for support Grafana 6.x
