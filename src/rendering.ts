@@ -1,19 +1,14 @@
 import _ from 'lodash';
 import './lib/jquery.flot.pie';
 import $ from 'jquery';
-//import './lib/jquery.flot';
-import './lib/loader';
+//import * as google from './lib/loader';
+
+google.charts.load('current', { packages: ['sankey'] });
 
 export default function link(scope: any, elem: any, attrs: any, ctrl: any) {
   let data;
   const panel = ctrl.panel;
   elem = elem.find('.sankey-panel__chart');
-  const $tooltip = $('<div id="tooltip">') as any;
-
-  if ((typeof google === 'undefined') || (typeof google.visualization === 'undefined')) {
-    google.charts.load("current", { packages: ["sankey"] });
-  }
-
   ctrl.events.on('render', () => {
     if (panel.legendType === 'Right side') {
       render(false);
@@ -39,28 +34,19 @@ export default function link(scope: any, elem: any, attrs: any, ctrl: any) {
     return 0;
   }
 
-  function formatter(label: any, slice: any) {
-    const sliceData = slice.data[0][slice.data[0].length - 1];
-    let decimal = 2;
-    const start = `<div style="font-size:${ctrl.panel.fontSize};text-align:center;padding:2px;">${label}<br/>`;
-
-    if (ctrl.panel.legend.percentageDecimals) {
-      decimal = ctrl.panel.legend.percentageDecimals;
-    }
-    if (ctrl.panel.legend.values && ctrl.panel.legend.percentage) {
-      return start + ctrl.formatValue(sliceData) + '<br/>' + slice.percent.toFixed(decimal) + '%</div>';
-    } else if (ctrl.panel.legend.values) {
-      return start + ctrl.formatValue(sliceData) + '</div>';
-    } else if (ctrl.panel.legend.percentage) {
-      return start + slice.percent.toFixed(decimal) + '%</div>';
-    } else {
-      return start + '</div>';
-    }
-  }
-
   function noDataPoints() {
     const html = '<div class="datapoints-warning"><span class="small">No data points</span></div>';
     elem.html(html);
+  }
+
+  function rgb2hex(rgb: any) {
+    rgb = rgb.match(/^rgb?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+    return (
+      '#' +
+      ('0' + parseInt(rgb[1], 10).toString(16)).slice(-2) +
+      ('0' + parseInt(rgb[2], 10).toString(16)).slice(-2) +
+      ('0' + parseInt(rgb[3], 10).toString(16)).slice(-2)
+    );
   }
 
   function addSankey() {
@@ -68,6 +54,15 @@ export default function link(scope: any, elem: any, attrs: any, ctrl: any) {
     const height = ctrl.height - getLegendHeight(ctrl.height);
 
     const size = Math.min(width, height);
+
+    let backgroundColor = rgb2hex($('body').css('background-color'));
+    if (backgroundColor.startsWith('#f') || backgroundColor.startsWith('#e')) {
+      backgroundColor = '#000000';
+    } else {
+      backgroundColor = '#ffffff';
+    }
+
+    const sankeyFont = $('body').css('font-size');
 
     const plotCanvas = $('<div></div>');
     const plotCss = {
@@ -77,41 +72,24 @@ export default function link(scope: any, elem: any, attrs: any, ctrl: any) {
       height: size + 'px',
     };
 
-    plotCanvas.css(plotCss);
-
-    const backgroundColor = $('body').css('background-color');
-
+    // Set chart options
     const options = {
-      legend: {
-        show: false,
-      },
-      series: {
-        pie: {
-          radius: 1,
-          innerRadius: 0,
-          show: true,
-          stroke: {
-            color: backgroundColor,
-            width: parseFloat(ctrl.panel.strokeWidth).toFixed(1),
-          },
+      width: '100%',
+      height: height + 'px',
+      sankey: {
+        node: {
           label: {
-            show: ctrl.panel.legend.show && ctrl.panel.legendType === 'On graph',
-            formatter: formatter,
-          },
-          highlight: {
-            opacity: 0.0,
-          },
-          combine: {
-            threshold: ctrl.panel.combine.threshold,
-            label: ctrl.panel.combine.label,
+            fontName: 'Times-Roman',
+            fontSize: sankeyFont,
+            color: backgroundColor,
+            bold: true,
+            italic: true,
           },
         },
       },
-      grid: {
-        hoverable: true,
-        clickable: false,
-      },
     };
+
+    plotCanvas.css(plotCss);
 
     data = ctrl.data;
 
@@ -140,67 +118,51 @@ export default function link(scope: any, elem: any, attrs: any, ctrl: any) {
     }
 
     elem.html(plotCanvas);
-
-
+    let jsonObject: any;
+    let labelArray: any;
+    let sankeyData: any;
+    let tempValue: any;
+    let chart: any;
     if (data.length !== 0 && Object.keys(data[0]).length !== 0) {
+      sankeyData = new google.visualization.DataTable();
+      sankeyData.addColumn('string', 'From');
+      sankeyData.addColumn('string', 'To');
+      sankeyData.addColumn('number', 'Count');
 
-      var data1 = new google.visualization.DataTable();
-      data1.addColumn('string', 'From');
-      data1.addColumn('string', 'To');
-      data1.addColumn('number', 'Count');
-      var jsonObject = {};
-      data.forEach(function (element) {
-        var labelArray = element.label.split("---");
-        for (var i = 0; i < labelArray.length - 1; i++) {
-          if (jsonObject.hasOwnProperty(labelArray[i] + "---" + labelArray[i + 1])) {
-            let tempValue = jsonObject[labelArray[i] + "---" + labelArray[i + 1]].value;
-            jsonObject[labelArray[i] + "---" + labelArray[i + 1]].value = element.data + tempValue;
-          } else {
-            jsonObject[labelArray[i] + "---" + labelArray[i + 1]] = {
-              "source": labelArray[i],
-              "target": labelArray[i + 1],
-              "value": element.data
+      if (data[0].label === 'A-series') {
+        console.log('Adding sample data suitable for Sankey diagram representation');
+        sankeyData.addRows([['AppA', 'Activity2', 10]]);
+        sankeyData.addRows([['AppB', 'Activity1', 10]]);
+        sankeyData.addRows([['AppB', 'Activity2', 5]]);
+        sankeyData.addRows([['Activity1', 'Scope1', 6]]);
+        sankeyData.addRows([['Activity2', 'Scope1', 7]]);
+        sankeyData.addRows([['Activity1', 'Scope2', 8]]);
+        sankeyData.addRows([['Activity2', 'Scope2', 2]]);
+      } else {
+        jsonObject = {};
+        data.forEach((element: any) => {
+          labelArray = element.label.split('---');
+          for (let i = 0; i < labelArray.length - 1; i++) {
+            if (jsonObject.hasOwnProperty(labelArray[i] + '---' + labelArray[i + 1])) {
+              tempValue = jsonObject[labelArray[i] + '---' + labelArray[i + 1]].value;
+              jsonObject[labelArray[i] + '---' + labelArray[i + 1]].value = element.data + tempValue;
+            } else {
+              jsonObject[labelArray[i] + '---' + labelArray[i + 1]] = {
+                source: labelArray[i],
+                target: labelArray[i + 1],
+                value: element.data,
+              };
             }
           }
+        });
+        for (const key in jsonObject) {
+          sankeyData.addRows([[jsonObject[key].source, jsonObject[key].target, jsonObject[key].value]]);
         }
-      });
-
-      for (var key in jsonObject) {
-        data1.addRows([
-          [jsonObject[key].source, jsonObject[key].target, jsonObject[key].value]
-        ]);
       }
-
-      // Set chart options
-      var options1 = {
-        width: '100%',
-        height: height,
-      };
-
-      // Instantiate and draw our sankey, passing in some options.
-      var chart = new google.visualization.Sankey(elem['0']);
-      chart.draw(data1, options1);
-
-      /*
-            // @ts-ignore
-            $.plot(plotCanvas, data, options);
-            plotCanvas.bind('plothover', (event: any, pos: any, item: any) => {
-              if (!item) {
-                $tooltip.detach();
-                return;
-              }
       
-              let body;
-              const percent = parseFloat(item.series.percent).toFixed(2);
-              const formatted = ctrl.formatValue(item.series.data[0][1]);
-      
-              body = '<div class="sankey-tooltip-small"><div class="sankey-tooltip-time">';
-              body += '<div class="sankey-tooltip-value">' + _.escape(item.series.label) + ': ' + formatted;
-              body += ' (' + percent + '%)' + '</div>';
-              body += '</div></div>';
-      
-              $tooltip.html(body).place_tt(pos.pageX + 20, pos.pageY);
-            });*/
+      // @ts-ignore
+      chart = new google.visualization.Sankey(elem['0']);
+      chart.draw(sankeyData, options);
     }
   }
   function render(incrementRenderCounter: any) {

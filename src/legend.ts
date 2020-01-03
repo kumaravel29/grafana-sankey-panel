@@ -12,10 +12,10 @@ import _ from 'lodash';
 // @ts-ignore
 import PerfectScrollbar from './lib/perfect-scrollbar.min';
 
-angular.module('grafana.directives').directive('piechartLegend', (popoverSrv: any, $timeout: any) => {
+angular.module('grafana.directives').directive('sankeyLegend', (popoverSrv: any, $timeout: any) => {
   return {
     link: (scope: any, elem: any) => {
-      const $container = $('<div class="piechart-legend__container"></div>');
+      const $container = $('<div class="sankey-legend__container"></div>');
       let firstRender = true;
       const ctrl = scope.ctrl;
       const panel = ctrl.panel;
@@ -138,18 +138,18 @@ angular.module('grafana.directives').directive('piechartLegend', (popoverSrv: an
       }
 
       function render() {
-        if (panel.legendType === 'On graph' || !panel.legend.show) {
+        if (!panel.legend.show) {
           $container.empty();
-          elem.find('.piechart-legend').css('padding-top', 0);
+          elem.find('.sankey-legend').css('padding-top', 0);
           return;
         } else {
-          elem.find('.piechart-legend').css('padding-top', 6);
+          elem.find('.sankey-legend').css('padding-top', 6);
         }
 
         if (firstRender) {
           elem.append($container);
-          $container.on('click', '.piechart-legend-icon', openColorSelector);
-          $container.on('click', '.piechart-legend-alias', toggleSeries);
+          $container.on('click', '.sankey-legend-icon', openColorSelector);
+          $container.on('click', '.sankey-legend-alias', toggleSeries);
           $container.on('click', 'th', sortLegend);
           firstRender = false;
         }
@@ -167,7 +167,7 @@ angular.module('grafana.directives').directive('piechartLegend', (popoverSrv: an
         const showValues = panel.legend.values || panel.legend.percentage;
         const tableLayout = (panel.legendType === 'Under graph' || panel.legendType === 'Right side') && showValues;
 
-        $container.toggleClass('piechart-legend-table', tableLayout);
+        $container.toggleClass('sankey-legend-table', tableLayout);
 
         let legendHeader;
         if (tableLayout) {
@@ -210,25 +210,25 @@ angular.module('grafana.directives').directive('piechartLegend', (popoverSrv: an
             decimal = ctrl.panel.legend.percentageDecimals;
           }
 
-          let html = '<div class="piechart-legend-series';
+          let html = '<div class="sankey-legend-series';
           if (ctrl.hiddenSeries[seriesData.label]) {
-            html += ' piechart-legend-series-hidden';
+            html += ' sankey-legend-series-hidden';
           }
           html += '" data-series-index="' + i + '">';
-          html += '<span class="piechart-legend-icon" style="float:none;">';
+          html += '<span class="sankey-legend-icon" style="float:none;">';
           html += '<i class="fa fa-minus pointer" style="color:' + seriesData.color + '"></i>';
           html += '</span>';
 
-          html += '<a class="piechart-legend-alias" style="float:none;">' + _.escape(seriesData.label) + '</a>';
+          html += '<a class="sankey-legend-alias" style="float:none;">' + _.escape(seriesData.label) + '</a>';
 
           if (showValues && tableLayout) {
             const value = seriesData.legendData;
             if (panel.legend.values) {
-              html += '<div class="piechart-legend-value">' + ctrl.formatValue(value) + '</div>';
+              html += '<div class="sankey-legend-value">' + ctrl.formatValue(value) + '</div>';
             }
             if (total) {
               const pvalue = ((value / total) * 100).toFixed(decimal) + '%';
-              html += '<div class="piechart-legend-value">' + pvalue + '</div>';
+              html += '<div class="sankey-legend-value">' + pvalue + '</div>';
             }
           }
 

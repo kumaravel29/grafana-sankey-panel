@@ -3,10 +3,11 @@ import _ from 'lodash';
 import kbn from 'grafana/app/core/utils/kbn';
 // @ts-ignore
 import TimeSeries from 'grafana/app/core/time_series';
+// @ts-ignore
 import rendering from './rendering';
 import './legend';
 
-class sankeyCtrl extends MetricsPanelCtrl {
+class SankeyCtrl extends MetricsPanelCtrl {
   static templateUrl = 'module.html';
   $rootScope: any;
   hiddenSeries: any;
@@ -21,7 +22,6 @@ class sankeyCtrl extends MetricsPanelCtrl {
     this.hiddenSeries = {};
 
     const panelDefaults = {
-      pieType: 'pie',
       legend: {
         show: true, // disable/enable legend
         values: true,
@@ -85,12 +85,16 @@ class sankeyCtrl extends MetricsPanelCtrl {
 
   parseSeries(series: any) {
     return _.map(this.series, (serie, i) => {
-      return {
-        label: serie.alias,
-        data: serie.stats[this.panel.valueName],
-        color: this.panel.aliasColors[serie.alias] || this.$rootScope.colors[i],
-        legendData: serie.stats[this.panel.valueName],
-      };
+      if (serie.alias.split('---').length >= 2) {
+        return {
+          label: serie.alias,
+          data: serie.stats[this.panel.valueName],
+          color: this.panel.aliasColors[serie.alias] || this.$rootScope.colors[i],
+          legendData: serie.stats[this.panel.valueName],
+        };
+      } else {
+        return {};
+      }
     });
   }
 
@@ -101,6 +105,17 @@ class sankeyCtrl extends MetricsPanelCtrl {
   }
 
   seriesHandler(seriesData: any) {
+    if (seriesData.target && !_.isEmpty(seriesData.target)) {
+      seriesData.alias = seriesData.target.split(' ').join('---');
+      if (seriesData.alias.split('---').length >= 2) {
+        const series = new TimeSeries({
+          datapoints: seriesData.datapoints,
+          alias: seriesData.alias,
+        });
+        series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
+        return series;
+      }
+    }
     const series = new TimeSeries({
       datapoints: seriesData.datapoints,
       alias: seriesData.target,
@@ -190,4 +205,4 @@ class sankeyCtrl extends MetricsPanelCtrl {
   }
 }
 
-export { sankeyCtrl, sankeyCtrl as MetricsPanelCtrl };
+export { SankeyCtrl, SankeyCtrl as MetricsPanelCtrl };

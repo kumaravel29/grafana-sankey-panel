@@ -1,6 +1,6 @@
 {
   "name": "sankey-panel",
-  "version": "1.3.9",
+  "version": "3.0.0",
   "description": "Pie chart panel for Grafana",
   "scripts": {
     "build": "grafana-toolkit plugin:build",
@@ -16,8 +16,11 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "@types/d3-sankey": "^0.11.0",
+    "@types/google.visualization": "^0.0.51",
     "angular": "^1.7.8",
     "flot": "^3.2.9",
+    "google-charts": "^2.0.0",
     "jquery": "^3.4.1",
     "jquery.flot": "^0.8.3",
     "lodash": "^4.17.15",
@@ -30,6 +33,7 @@
     "@types/flot": "^0.0.31",
     "@types/grafana": "github:CorpGlory/types-grafana",
     "@types/lodash": "4.14.138",
-    "grafana": "file:grafana"
+    "d3-sankey": "^0.12.3",
+    "grafana-sdk-mocks": "github:grafana/grafana-sdk-mocks"
   }
 }

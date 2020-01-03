@@ -1,4 +1,4 @@
-import { sankeyCtrl } from './sankey_ctrl';
+import { SankeyCtrl } from './sankey_ctrl';
 import { loadPluginCss } from 'grafana/app/plugins/sdk';
 
 loadPluginCss({
@@ -6,4 +6,4 @@ loadPluginCss({
   light: 'plugins/grafana-sankey-panel/styles/light.css',
 });
 
-export { sankeyCtrl as PanelCtrl };
+export { SankeyCtrl as PanelCtrl };
