@@ -24,7 +24,7 @@
     "jquery": "^3.4.1",
     "jquery.flot": "^0.8.3",
     "lodash": "^4.17.15",
-    "yarn": "^1.21.1"
+    "yarn": "^1.22.0"
   },
   "devDependencies": {
     "@grafana/toolkit": "^6.5.2",
