@@ -29,6 +29,23 @@ Afterwards restart grafana-server and the plugin should be automatically detecte
 git clone https://github.com/kumaravel29/sankey-panel.git
 sudo service grafana-server restart
 ```
+#### Note: 
+From v6.7, automatic loading of unsigned plugin is disabled. To load unsigned plugin, use the additional setting of [allow_loading_unsigned_plugins](https://grafana.com/docs/grafana/latest/administration/configuration/#allow_loading_unsigned_plugins) in the plugins section of grafana.ini
+```ini
+[plugins]
+;enable_alpha = false
+;app_tls_skip_verify_insecure = false
+# Enter a comma-separated list of plugin identifiers to identify plugins to load even if they are unsigned. Plugins with modified signatures are never loaded.
+allow_loading_unsigned_plugins = grafana-sankey-panel
+# Enable or disable installing plugins directly from within Grafana.
+;plugin_admin_enabled = false
+;plugin_admin_external_manage_enabled = false
+;plugin_catalog_url = https://grafana.com/grafana/plugins/
+```
+For Grafana in docker, this can be achieved by setting the environment variable also.
+```env
+GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS=grafana-sankey-panel
+```
 
 ## Clone into a directory of your choice
 
